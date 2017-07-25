@@ -1,5 +1,7 @@
 import requests
 import execjs
+import re
+
 
 from bs4 import BeautifulSoup as bs
 
@@ -70,11 +72,11 @@ def getMainCources(homeContent):
 def pushPercent(url):
     courceData = s.get(domin+url, headers=headers)
     courceContent = bs(courceData.content,'lxml')
+    re.match('{(. |\n) *}',courceContent.text)
+
     jsStr = ""
 
-
-
-    requestData = {(. |\n) *};
+    requestData = ;
 
 
 
