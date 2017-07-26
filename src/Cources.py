@@ -72,11 +72,21 @@ def getMainCources(homeContent):
 def pushPercent(url):
     courceData = s.get(domin+url, headers=headers)
     courceContent = bs(courceData.content,'lxml')
-    re.match('{(. |\n) *}',courceContent.text)
 
-    jsStr = ""
+    # 获取pushPercent参数
+    m = re.search('var requestData =(.|\n)*?}',courceContent.text)
+    data = m.group()
+    jsStr = 'function getObj(){'+data + ';return requestData;}'
+    ctx = execjs.compile(jsStr)
+    headers2 = ctx.call("getObj")
 
-    requestData = ;
+    # 获取pushPercent url
+
+
+
+
+
+    # requestData =
 
 
 
@@ -89,13 +99,3 @@ if __name__ == '__main__':
                 print(childCource['课程名称:'] + '已经学习过,不需要学习')
             print(childCource['课程名称:'] + '开始学习')
             pushPercent(childCource['url'])
-
-
-
-
-
-
-
-
-
-
