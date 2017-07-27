@@ -51,6 +51,14 @@ def testRe3():
     print(testJson)
     print(testJson['Value']['Process'])
 
+# 取中间的值
+def testRe4():
+    courceContent = '({"State":1,"Value":{"Process":40.0,"StudyTimeLength":1202,"OtherMediaName":"《打好河南的四张牌》02","OtherMedId":"hnzj201703160002","Type":1,"Message":null,"IsLoad":false},"Error":""})'
+    data = re.search('var mediaTime=.*', courceContent.text)[0]
+    data = re.search('[0-9]*', data)[0]
+    print(data);
+
+
 
 
 # json操作

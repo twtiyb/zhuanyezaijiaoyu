@@ -17,7 +17,7 @@ s = requests.Session()
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
     'Referer': 'http://zjxy.hnhhlearning.com/Home',
-    'Cookie': 'UM_distinctid=15d41670c242e8-018e214f8a9803-30667808-fa000-15d41670c25380; ASP.NET_SessionId=55uex40rlkgpnz00ohevuvoq; CNZZDATA1254133248=1011469955-1500039283-http%253A%252F%252Fzjpx.hnhhlearning.com%252F%7C1501083309; menu_bind=d74ced9687c44e05b92f28df42a08afd; hbjyUsersCookieszjxy.hnhhlearning.com=615|615|2f047a1d01464cb3ac2facd6eb01f3aa; IsLoginUsersCookies_zjxy.hnhhlearning.comzjxy.hnhhlearning.com=IsLogin'
+    'Cookie': 'UM_distinctid=15d3a1359ff159-05935b50bfa855-30667808-1fa400-15d3a135a007fb; CNZZDATA1254133248=1818098270-1499915688-http%253A%252F%252Fzjpx.hnhhlearning.com%252F%7C1499948291; ASP.NET_SessionId=bolwxrebzchadj32wjcnfjoh; hbjyUsersCookieszjxy.hnhhlearning.com=615|615|2f047a1d01464cb3ac2facd6eb01f3aa; IsLoginUsersCookies_zjxy.hnhhlearning.comzjxy.hnhhlearning.com=IsLogin'
 }
 
 # 登陆到home
@@ -88,28 +88,27 @@ def pushPercent(sscId, medId):
     pushParams['CurrentTimespan'] = 3000
 
 
-
     # 获取pushPercent url
     m = re.search('var timingUrl = ".*?"', courceContent.text)
     data = m.group()
     pushUrl = re.search('"(\S*)"', data)[1]
 
     # 拼接参数
+    # type == 2 代表开始
+    pushParams['Type'] = 2
     courceData = s.get(pushUrl + 'sscId=' + sscId + '&medId=' + medId, params=pushParams, headers=headers)
     testStr = courceData.text
     result = json.loads(re.search('\((\S*)\)', testStr)[1]);
+
     print('完成' + str(result['Value']['Process']))
+
+    # type == 1 代表持续,类似于心跳...网站这里必须是先开始,然后再发心跳,才能增加进度.
+    pushParams['Type'] = 1
     while(result['Value']['Process'] < 100):
         courceData = s.get(pushUrl + 'sscId=' + sscId + '&medId=' + medId, params=pushParams, headers=headers)
         testStr = courceData.text
         result = json.loads(re.search('\((\S*)\)', testStr)[1]);
         print('完成' + str(result['Value']['Process']))
-
-
-
-
-
-
         # requestData =
 
 
