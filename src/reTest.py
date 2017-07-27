@@ -17,9 +17,10 @@ headers = {
 def testjs():
     ctx = execjs.compile(stra)
     headers2 = ctx.call("getStr");
-    print headers2
+    print(headers2)
 
 
+# 要
 def testRe():
     pattern = re.compile('var requestData(.|\n)*?}')
     # match = pattern.match(str)
@@ -32,14 +33,48 @@ def testRe():
     m = re.search('var requestData(.|\n)*?}',stra)
     # m = re.match(pattern,stra)
     if m:
-        print m.group()
+        print(m.group())
+
+# 取中间的值
+def testRe2():
+    testStr = 'var timingUrl = "http://hnwcf.59iedu.com/Home/Timing?usrId=cbbb39ba9a1541eba5828f540bb1641e&medId=hnzj201703160002&studyId=7e406fa82b584e7c9fe8c5af6200fff9"'
+    m = re.search('"(\S*)"',testStr)[1]
+    print(m)
+
+# 取中间的值
+def testRe3():
+    testStr = '({"State":1,"Value":{"Process":40.0,"StudyTimeLength":1202,"OtherMediaName":"《打好河南的四张牌》02","OtherMedId":"hnzj201703160002","Type":1,"Message":null,"IsLoad":false},"Error":""})'
+    # 正则
+    m = re.search('\((\S*)\)',testStr)[1]
+    print(m)
+    testJson = json.loads(m)
+    print(testJson)
+    print(testJson['Value']['Process'])
+
+
+
+# json操作
+def testJson():
+    jsonStr = u'{"State":1,"Value":{"Process":40.0,"StudyTimeLength":1202,"OtherMediaName":"ddd","OtherMedId":"hnzj201703160002","Type":1,"Message":null,"IsLoad":false},"Error":""}'
+    print(jsonStr)
+
+    testJson = json.loads(jsonStr)
+    print(testJson)
+    print(testJson['Value']['Process'])
+
+    testJson = json.dumps(testJson)
+    print(testJson)
+
 
 
 
 
 if __name__ == '__main__':
     # testjs()
-    testRe()
+    # testRe()
+    # testRe2()
+    testRe3()
+    # testJson()
 # print execjs.eval("'red yellow blue'.split(' ')")
 
 
