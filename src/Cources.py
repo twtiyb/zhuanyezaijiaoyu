@@ -2,6 +2,7 @@ import requests
 import execjs
 import re
 import json
+import sqlite3
 
 
 from bs4 import BeautifulSoup as bs
@@ -10,6 +11,7 @@ domin = 'http://zjxy.hnhhlearning.com'
 homeUrl = 'http://zjxy.hnhhlearning.com/Home'
 learningUrl = 'http://zjxy.hnhhlearning.com/Study/Learning?'
 learningMediaLiUrl = 'http://zjxy.hnhhlearning.com/Study/Learning/MediaLi?'
+answers = 'http://zjxy.hnhhlearning.com/Study/ExamList/TestHistory'
 
 s = requests.Session()
 
@@ -17,7 +19,7 @@ s = requests.Session()
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
     'Referer': 'http://zjxy.hnhhlearning.com/Home',
-    'Cookie': 'UM_distinctid=15d3a1359ff159-05935b50bfa855-30667808-1fa400-15d3a135a007fb; CNZZDATA1254133248=1818098270-1499915688-http%253A%252F%252Fzjpx.hnhhlearning.com%252F%7C1499948291; ASP.NET_SessionId=bolwxrebzchadj32wjcnfjoh; hbjyUsersCookieszjxy.hnhhlearning.com=615|615|2f047a1d01464cb3ac2facd6eb01f3aa; IsLoginUsersCookies_zjxy.hnhhlearning.comzjxy.hnhhlearning.com=IsLogin'
+    'Cookie': 'UM_distinctid=15d41670c242e8-018e214f8a9803-30667808-fa000-15d41670c25380; ASP.NET_SessionId=hvfkhbbwc0e4wk2bb4js4pw5; hbjyUsersCookieszjxy.hnhhlearning.com=615|615|2f047a1d01464cb3ac2facd6eb01f3aa; IsLoginUsersCookies_zjxy.hnhhlearning.comzjxy.hnhhlearning.com=IsLogin; CNZZDATA1254133248=1011469955-1500039283-http%253A%252F%252Fzjpx.hnhhlearning.com%252F%7C1501169860; menu_bind=-1'
 }
 
 # 登陆到home
@@ -111,8 +113,8 @@ def pushPercent(sscId, medId):
         print('完成' + str(result['Value']['Process']))
         # requestData =
 
-
-if __name__ == '__main__':
+# 提交学习进度
+def learn():
     cources_list = getMainCources(homeContent)
     for cource in cources_list:
         for childCource in cource['全部课程']:
@@ -121,3 +123,47 @@ if __name__ == '__main__':
                 continue
             print(childCource['子课程名称'] + ':开始学习')
             pushPercent(cource['sscId'], childCource['medId'])
+
+
+
+# 从练习记录中获取考试答案,保存到数据库中
+def getsAnswers():
+
+
+    answersHomeData = s.get(homeUrl, headers=headers)
+    answersHomeContent = bs(answersHomeData.content, 'lxml')
+    for idx, tr in enumerate(answersHomeContent.select(".listtable tbody tr")):
+        sqlStr = '''INSERT INTO Exam (exam_id, name) VALUES ({0},{1})'''.format('''aa''','''bb''')
+        execSql(sqlStr)
+    print('ss')
+
+
+
+# todo 直接读取目录下的数据库脚本来创建数据库,目前直接用其他方式创建数据库
+def createSqliteDb():
+    conn = sqlite3.connect("test.db")
+    c = conn.cursor()
+    c.execute('''CREATE TABLE category
+          (id int primary key, sort int, name text)''')
+    c.execute('''CREATE TABLE book
+          (id int primary key,
+           sort int,
+           name text,
+           price real,
+           category int,
+           FOREIGN KEY (category) REFERENCES category(id))''')
+    conn.commit()
+    conn.close()
+
+# todo 真是浪费,后边使用orm框架来操作数据库
+def execSql(sqlStr):
+    conn = sqlite3.connect("test.db")
+    c = conn.cursor()
+    c.execute(sqlStr)
+    conn.commit()
+    conn.close()
+
+
+if __name__ == '__main__':
+    getsAnswers()
+    print()
