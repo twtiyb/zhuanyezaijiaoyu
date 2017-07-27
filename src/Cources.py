@@ -102,7 +102,7 @@ def pushPercent(sscId, medId):
 
     print('完成' + str(result['Value']['Process']))
 
-    # type == 1 代表持续,类似于心跳...网站这里必须是先开始,然后再发心跳,才能增加进度.
+    # type == 1 代表持续,类似于心跳...网站这里必须是先开始,然后再发心跳,才能增加进度.所以先要设置成2请求一次,再设置成1持续请求
     pushParams['Type'] = 1
     while(result['Value']['Process'] < 100):
         courceData = s.get(pushUrl + 'sscId=' + sscId + '&medId=' + medId, params=pushParams, headers=headers)
