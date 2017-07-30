@@ -19,7 +19,7 @@ s = requests.Session()
 headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36',
     'Referer': 'http://zjxy.hnhhlearning.com/Home',
-    'Cookie': 'UM_distinctid=15d41670c242e8-018e214f8a9803-30667808-fa000-15d41670c25380; ASP.NET_SessionId=hvfkhbbwc0e4wk2bb4js4pw5; hbjyUsersCookieszjxy.hnhhlearning.com=615|615|2f047a1d01464cb3ac2facd6eb01f3aa; IsLoginUsersCookies_zjxy.hnhhlearning.comzjxy.hnhhlearning.com=IsLogin; CNZZDATA1254133248=1011469955-1500039283-http%253A%252F%252Fzjpx.hnhhlearning.com%252F%7C1501169860; menu_bind=-1'
+    'Cookie': 'UM_distinctid=15d41670c242e8-018e214f8a9803-30667808-fa000-15d41670c25380; CNZZDATA1254133248=1011469955-1500039283-http%253A%252F%252Fzjpx.hnhhlearning.com%252F%7C1501175262; ASP.NET_SessionId=zlx3fyl1gtkxrjmjpqgzb5uv; hbjyUsersCookieszjxy.hnhhlearning.com=615|615|2f047a1d01464cb3ac2facd6eb01f3aa; IsLoginUsersCookies_zjxy.hnhhlearning.comzjxy.hnhhlearning.com=IsLogin'
 }
 
 # 登陆到home
@@ -128,12 +128,12 @@ def learn():
 
 # 从练习记录中获取考试答案,保存到数据库中
 def getsAnswers():
-
-
     answersHomeData = s.get(homeUrl, headers=headers)
     answersHomeContent = bs(answersHomeData.content, 'lxml')
     for idx, tr in enumerate(answersHomeContent.select(".listtable tbody tr")):
-        sqlStr = '''INSERT INTO Exam (exam_id, name) VALUES ({0},{1})'''.format('''aa''','''bb''')
+
+
+        sqlStr = '''INSERT INTO Exam (exam_id, name) VALUES ('{0}','{1}')'''.format(str(tr.contents[1]['value']),str(tr.contents[1].text))
         execSql(sqlStr)
     print('ss')
 
@@ -166,4 +166,5 @@ def execSql(sqlStr):
 
 if __name__ == '__main__':
     getsAnswers()
+    # createSqliteDb();
     print()
